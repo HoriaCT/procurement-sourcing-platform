@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Interface | H Sourcing Platform</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #071a3b, #164a85);
+            color: #17243b;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 6%;
+            color: white;
+            border-bottom: 1px solid #ffffff30;
+        }
+
+        .brand {
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 22px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .intro { color: white; margin-bottom: 25px; }
+        .intro h1 { font-size: 36px; margin-bottom: 10px; }
+        .intro p { color: #d7e5f7; line-height: 1.6; }
+
+        .form-card {
+            background: white;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 18px 50px #0003;
+        }
+
+        .form-card h2 { margin-top: 0; color: #102b52; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .full { grid-column: 1 / -1; }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+            background: #fbfdff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #7db5ff;
+            border-color: #2563eb;
+        }
+
+        textarea { min-height: 110px; resize: vertical; }
+
+        .hint { font-size: 12px; color: #64748b; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button, .back {
+            padding: 13px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            border: none;
+            color: white;
+            background: #123f91;
+        }
+
+        button:hover { background: #0b2d6b; }
+
+        .back {
+            color: #123f91;
+            border: 1px solid #123f91;
+        }
+
+        .notice {
+            padding: 12px;
+            border-radius: 8px;
+            background: #eaf3ff;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 650px) {
+            header { align-items: flex-start; gap: 15px; flex-direction: column; }
+            nav a { margin: 0 14px 0 0; }
+            .grid { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+            .form-card { padding: 22px; }
+            .intro h1 { font-size: 29px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">H SOURCING PLATFORM</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="mailto:support@example.com">Contact</a>
+        <a href="mailto:support@example.com">Support</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="intro">
+        <h1>Client Interface</h1>
+        <p>
+            Set up your company profile and define your sourcing requirements.
+            Share accurate delivery and contact details to prepare your request.
+        </p>
+    </section>
+
+    <section class="form-card">
+        <h2>Company Information</h2>
+        <p class="hint">Fields marked with * are mandatory.</p>
+
+        {% if error %}
+            <div class="notice">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+            <div class="notice">{{ success }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="grid">
+                <div class="field">
+                    <label for="company_name">Company name *</label>
+                    <input id="company_name" name="company_name"
+                           required maxlength="200"
+                           placeholder="e.g. Example Manufacturing Ltd">
+                </div>
+
+                <div class="field">
+                    <label for="country">Country *</label>
+                    <input id="country" name="country" required
+                           placeholder="e.g. Romania">
+                </div>
+
+                <div class="field">
+                    <label for="city">City *</label>
+                    <input id="city" name="city" required
+                           placeholder="e.g. Bucharest">
+                </div>
+
+                <div class="field">
+                    <label for="contact_name">Contact person *</label>
+                    <input id="contact_name" name="contact_name"
+                           required placeholder="Full name">
+                </div>
+
+                <div class="field">
+                    <label for="email">Business email *</label>
+                    <input id="email" name="email" type="email"
+                           required placeholder="name@company.com">
+                </div>
+
+                <div class="field">
+                    <label for="category">Product/service category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="IT Equipment">IT Equipment</option>
+                        <option value="Office Supplies">Office Supplies</option>
+                        <option value="Industrial Equipment">Industrial Equipment</option>
+                        <option value="Maintenance">Maintenance & Repair</option>
+                        <option value="Logistics">Logistics & Transport</option>
+                        <option value="Professional Services">Professional Services</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="field full">
+                    <label for="delivery_address">Delivery address *</label>
+                    <input id="delivery_address" name="delivery_address"
+                           required placeholder="Street, number, postal code">
+                </div>
+
+                <div class="field full">
+                    <label for="requirements">Additional requirements</label>
+                    <textarea id="requirements" name="requirements"
+                              placeholder="Describe the products or services you are looking for..."></textarea>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Continue</button>
+                <a class="back" href="/">Back to Home</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+</body>
+</html>
