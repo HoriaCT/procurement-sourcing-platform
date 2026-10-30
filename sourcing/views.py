@@ -154,7 +154,7 @@ def request_detail(request, request_id):
                     <h2>{"Actualizează oferta" if existing_offer else "Trimite oferta"}</h2>
                     <form method="post" action="/sourcing/requests/{rfq.pk}/offer/">
                         <input type="hidden" name="csrfmiddlewaretoken"
-                               value="{request.META.get('CSRF_COOKIE', '')}">
+                               value="{get_token(request)}">
                         <label>Preț unitar (EUR):</label><br>
                         <input type="number" name="price" step="0.01" min="0"
                                value="{existing_offer.price if existing_offer else ''}" required><br>
@@ -501,26 +501,24 @@ def client_interface(request):
 
     return render(request, "sourcing/client_interface.html")
 def supplier_interface(request):
-    content = f"""
+    content = """
     <style>
         body {
-                margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #202b3c;
-
-    background:
-        linear-gradient(
-            rgba(5, 20, 45, 0.72),
-            rgba(5, 20, 45, 0.82)
-        ),
-        url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1920&q=85");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #202b3c;
+            background:
+                linear-gradient(
+                    rgba(5, 20, 45, 0.72),
+                    rgba(5, 20, 45, 0.82)
+                ),
+                url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1920&q=85");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
         }
 
         .supplier-container {
@@ -635,7 +633,8 @@ def supplier_interface(request):
             <h2>Company Information</h2>
             <p>Fields marked with * are mandatory.</p>
 
-              <input type="hidden" name="csrfmiddlewaretoken" value="{get_token(request)}">
+            <form method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="__CSRF_TOKEN__">
 
                 <div class="supplier-grid">
                     <div class="supplier-field">
@@ -725,4 +724,5 @@ def supplier_interface(request):
         </div>
     </div>
     """
+    content = content.replace("__CSRF_TOKEN__", get_token(request))
     return page("Supplier Interface", content)
